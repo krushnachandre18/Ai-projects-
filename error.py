@@ -1,7 +1,10 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 
 app = Flask(__name__)
+@app.route("/")
+def home():
+    return send_file("error.html")
 CORS(app)
 
 @app.route("/analyze", methods=["POST"])
