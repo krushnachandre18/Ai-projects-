@@ -17,8 +17,19 @@
     <option value="java">Java</option>
     <option value="python">Python</option>
 </select>
-    <textarea id="codeInput" placeholder="Paste your code here..."></textarea>
+    <div class="editor">
+    <div class="editor-header">
+        <div class="dots">
+            <span class="red"></span>
+            <span class="yellow"></span>
+            <span class="green"></span>
+        </div>
+        <span class="filename">main.c</span>
+    </div>
 
+    <textarea id="codeInput"></textarea>
+        <textarea id="codeInput" placeholder="// Write your code here..."></textarea>
+</div>
     <button onclick="analyzeError()">Analyze Code</button>
 
     <div id="output">
