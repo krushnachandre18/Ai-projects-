@@ -107,3 +107,17 @@ window.addEventListener("resize", () => {
     canvas.height = window.innerHeight;
     initParticles();
 });
+let language = document.getElementById("language").value;
+let language = document.getElementById("language").value;
+let code = document.getElementById("codeInput").value.toLowerCase();
+if (language === "c" && code.includes("printff")) {
+    output.innerHTML = `
+    <h2>Typo Error</h2>
+    <p>Language: C</p>
+    <p>Fix: Use printf()</p>`;
+}
+else if (language === "java" && code.includes("system.out.printn")) {
+    output.innerHTML = `
+    <h2>Java Error</h2>
+    <p>Fix: Use println()</p>`;
+}
