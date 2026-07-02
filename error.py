@@ -1,58 +1,35 @@
 from flask import Flask, request, jsonify, send_file
-from flask_cors import CORS
 
 app = Flask(__name__)
+
 @app.route("/")
 def home():
     return send_file("error.html")
-CORS(app)
+
+@app.route("/error.css")
+def css():
+    return send_file("error.css")
+
+@app.route("/error.js")
+def js():
+    return send_file("error.js")
 
 @app.route("/analyze", methods=["POST"])
 def analyze():
-    data = request.json
-    code = data.get("code", "").lower()
+    code = request.json.get("code", "").lower()
 
     if "printff" in code:
         return jsonify({
             "error": "Typo Error",
-            "reason": "printff is not a valid function.",
-            "fix": "Use printf() instead."
+            "reason": "printff is wrong",
+            "fix": "Use printf()"
         })
 
-    elif "printf" in code and ";" not in code:
-        return jsonify({
-            "error": "Syntax Error",
-            "reason": "Possible missing semicolon.",
-            "fix": "Add semicolon (;) at end of statement."
-        })
-
-    elif "if(" in code and "=" in code and "==" not in code:
-        return jsonify({
-            "error": "Comparison Error",
-            "reason": "Assignment operator used inside condition.",
-            "fix": "Use == for comparison."
-        })
-
-    elif "system.out.printn" in code:
-        return jsonify({
-            "error": "Java Typo Error",
-            "reason": "printn is invalid.",
-            "fix": "Use println()."
-        })
-
-    elif "null" in code:
-        return jsonify({
-            "error": "Null Pointer Risk",
-            "reason": "Null values may crash program.",
-            "fix": "Initialize variable properly."
-        })
-
-    else:
-        return jsonify({
-            "error": "No Known Error Found",
-            "reason": "Pattern not found in database.",
-            "fix": "Try another code sample."
-        })
+    return jsonify({
+        "error": "No Error Found",
+        "reason": "Code looks fine",
+        "fix": "No fix needed"
+    })
 
 if __name__ == "__main__":
     app.run(debug=True)
