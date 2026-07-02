@@ -121,3 +121,24 @@ else if (language === "java" && code.includes("system.out.printn")) {
     <h2>Java Error</h2>
     <p>Fix: Use println()</p>`;
 }
+let language = document.getElementById("language").value;
+let code = document.getElementById("codeInput").value.toLowerCase();
+let output = document.getElementById("output");
+if (language === "c" && code.includes("printff")) {
+    output.innerHTML = `
+    <h2>Typo Error</h2>
+    <p>Language: C</p>
+    <p>Reason: printff invalid</p>
+    <p>Fix: Use printf()</p>`;
+}
+else if (language === "java" && code.includes("system.out.printn")) {
+    output.innerHTML = `
+    <h2>Java Typo Error</h2>
+    <p>Language: Java</p>
+    <p>Fix: Use println()</p>`;
+}
+else {
+    output.innerHTML = `
+    <h2>No Error Found</h2>
+    <p>Code looks good.</p>`;
+}
