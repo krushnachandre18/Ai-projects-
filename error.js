@@ -48,7 +48,7 @@ function analyzeError() {
   
   document.getElementById("output").innerHTML = "Analyzing...";
   
-  fetch("http://127.0.0.1:5000/analyze", {
+  fetch("http://fetch("/analyze", {:5000/analyze", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
