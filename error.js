@@ -47,66 +47,43 @@ function analyzeError() {
     });
 }
 
-
-// Particles Animation
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-let particlesArray = [];
+const letters = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&";
+const fontSize = 16;
+const columns = canvas.width / fontSize;
 
-class Particle {
-    constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 3 + 1;
-        this.speedX = Math.random() * 2 - 1;
-        this.speedY = Math.random() * 2 - 1;
-    }
+const drops = [];
+for (let i = 0; i < columns; i++) {
+    drops[i] = 1;
+}
 
-    update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
+function drawMatrix() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
-        if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
-    }
+    ctx.fillStyle = "#00ff99";
+    ctx.font = fontSize + "px monospace";
 
-    draw() {
-        ctx.fillStyle = "#00ff99";
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
+    for (let i = 0; i < drops.length; i++) {
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+        }
+
+        drops[i]++;
     }
 }
 
-function initParticles() {
-    particlesArray = [];
-    for (let i = 0; i < 80; i++) {
-        particlesArray.push(new Particle());
-    }
-}
-initParticles();
+setInterval(drawMatrix, 33);
 
-function animateParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    for (let particle of particlesArray) {
-        particle.update();
-        particle.draw();
-    }
-
-    requestAnimationFrame(animateParticles);
-}
-animateParticles();
-
-window.addEventListener("resize", () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    initParticles();
-});
 let language = document.getElementById("language").value;
 let language = document.getElementById("language").value;
 let code = document.getElementById("codeInput").value.toLowerCase();
