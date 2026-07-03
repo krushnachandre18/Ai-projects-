@@ -16,6 +16,18 @@ typeText();
 // Error Database
 const errorDatabase = {
     c: [
+        if (
+    language === "c" &&
+    code.includes("printf(") &&
+    !code.includes(");")
+) {
+    output.innerHTML = `
+        <h2>Syntax Error</h2>
+        <p><b>Reason:</b> Missing semicolon (;)</p>
+        <p><b>Fix:</b> Add ; at end</p>
+    `;
+    return;
+}
         { pattern: "printff", error: "Typo Error", fix: "Use printf()" },
         { pattern: "pritnf", error: "Typo Error", fix: "Use printf()" },
         { pattern: "if(a=b)", error: "Comparison Error", fix: "Use ==" },
