@@ -25,6 +25,46 @@ function analyzeError() {
     compilerOutput(output, "Compiling...\n----------------------------");
 
     setTimeout(() => {
+        const errorDatabase = {
+    java: [
+        { pattern: "printn", error: "Java Typo Error", fix: "Use println()" },
+        { pattern: "public clas", error: "Class Error", fix: "Use class" },
+        { pattern: "mian", error: "Main Method Error", fix: "Use main()" },
+        { pattern: "system.out", error: "Case Error", fix: "Use System.out" },
+        { pattern: "scanner", error: "Scanner Error", fix: "Check Scanner syntax" },
+        { pattern: "=", error: "Possible Assignment Error", fix: "Use == in conditions" },
+        { pattern: "int a = \"", error: "Datatype Error", fix: "String cannot go in int" },
+        { pattern: "if(", error: "Check if syntax", fix: "Check brackets" },
+        { pattern: "println(hello)", error: "Quote Error", fix: "Use quotes" },
+        { pattern: "system.out.print", error: "Print Error", fix: "Check syntax" }
+    ],
+
+    python: [
+        { pattern: "prnt", error: "Python Typo Error", fix: "Use print()" },
+        { pattern: "imput", error: "Input Error", fix: "Use input()" },
+        { pattern: "rnage", error: "Range Error", fix: "Use range()" },
+        { pattern: "improt", error: "Import Error", fix: "Use import" },
+        { pattern: "leng", error: "Length Error", fix: "Use len()" },
+        { pattern: "if x =", error: "Assignment Error", fix: "Use ==" },
+        { pattern: "print(hello)", error: "Quote Error", fix: "Use quotes" },
+        { pattern: "true", error: "Boolean Error", fix: "Use True" },
+        { pattern: "false", error: "Boolean Error", fix: "Use False" },
+        { pattern: "if x >", error: "Check Colon", fix: "Missing :" }
+    ],
+
+    cpp: [
+        { pattern: "coutt", error: "C++ Typo Error", fix: "Use cout" },
+        { pattern: "cnn", error: "Input Error", fix: "Use cin" },
+        { pattern: "end;", error: "Endl Error", fix: "Use endl" },
+        { pattern: "void main", error: "Main Error", fix: "Use int main()" },
+        { pattern: "#include<iostream", error: "Header Error", fix: "Check >" },
+        { pattern: "=", error: "Assignment Error", fix: "Use ==" },
+        { pattern: "cout << hello", error: "Quote Error", fix: "Use quotes" },
+        { pattern: "if(", error: "Check if syntax", fix: "Check brackets" },
+        { pattern: "cout", error: "Namespace Error", fix: "Use std::cout or namespace" },
+        { pattern: "cin <<", error: "Operator Error", fix: "Use >>" }
+    ]
+};
 
         // C RULES
         if (language === "c") {
