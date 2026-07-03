@@ -17,6 +17,24 @@ function compilerOutput(output, msg) {
 
 function analyzeError() {
     let language = document.getElementById("language").value;
+    let code = document.getElementById("codeInput").value.toLowerCase();
+    let output = document.getElementById("output");
+
+    let errors = errorDatabase[language];
+
+    for (let i = 0; i < errors.length; i++) {
+        if (code.includes(errors[i].pattern.toLowerCase())) {
+            output.innerHTML = `
+                <h2>${errors[i].error}</h2>
+                <p>Fix: ${errors[i].fix}</p>
+            `;
+            return;
+        }
+    }
+
+    output.innerHTML = "<h2>No Error Found</h2>";
+}
+    let language = document.getElementById("language").value;
     let code = document.getElementById("codeInput").value;
     let output = document.getElementById("output");
 
