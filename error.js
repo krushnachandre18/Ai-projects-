@@ -12,46 +12,32 @@ function typeText() {
 }
 typeText();
 
-
-// Error Database
 const errorDatabase = {
     c: [
-        
-}
         { pattern: "printff", error: "Typo Error", fix: "Use printf()" },
         { pattern: "pritnf", error: "Typo Error", fix: "Use printf()" },
-        { pattern: "if(a=b)", error: "Comparison Error", fix: "Use ==" },
-        { pattern: "#include<stdio.h", error: "Header Error", fix: "Missing >" },
-        { pattern: "scanf(", error: "Input Error", fix: "Check scanf syntax" }
+        { pattern: "if(a=b)", error: "Comparison Error", fix: "Use ==" }
     ],
 
     java: [
         { pattern: "printn", error: "Java Typo Error", fix: "Use println()" },
         { pattern: "public clas", error: "Class Error", fix: "Use class" },
-        { pattern: "mian", error: "Main Error", fix: "Use main()" },
-        { pattern: "system.out", error: "Case Error", fix: "Use System.out" },
-        { pattern: "new scanner", error: "Scanner Error", fix: "Use Scanner" }
+        { pattern: "mian", error: "Main Error", fix: "Use main()" }
     ],
 
     python: [
         { pattern: "prnt", error: "Python Typo Error", fix: "Use print()" },
         { pattern: "imput", error: "Input Error", fix: "Use input()" },
-        { pattern: "rnage", error: "Range Error", fix: "Use range()" },
-        { pattern: "improt", error: "Import Error", fix: "Use import" },
-        { pattern: "leng(", error: "Length Error", fix: "Use len()" }
+        { pattern: "rnage", error: "Range Error", fix: "Use range()" }
     ],
 
     cpp: [
         { pattern: "coutt", error: "C++ Typo Error", fix: "Use cout" },
         { pattern: "cnn", error: "Input Error", fix: "Use cin" },
-        { pattern: "void main", error: "Main Error", fix: "Use int main()" },
-        { pattern: "end;", error: "Endl Error", fix: "Use endl" },
-        { pattern: "cin <<", error: "Operator Error", fix: "Use >>" }
+        { pattern: "void main", error: "Main Error", fix: "Use int main()" }
     ]
 };
 
-
-// Analyze Function
 function analyzeError() {
     let language = document.getElementById("language").value;
     let code = document.getElementById("codeInput").value.toLowerCase();
@@ -60,6 +46,26 @@ function analyzeError() {
     output.innerHTML = "<h3>Analyzing...</h3>";
 
     setTimeout(() => {
+
+        // C Semicolon Check
+        if (language === "c") {
+            if (code.includes('printf("') && !code.includes('";') && !code.includes(');')) {
+                output.innerHTML = `
+                    <h2>Semicolon Error</h2>
+                    <p><b>Fix:</b> Add ; after printf statement</p>
+                `;
+                return;
+            }
+
+            if (code.includes("return 0") && !code.includes("return 0;")) {
+                output.innerHTML = `
+                    <h2>Semicolon Error</h2>
+                    <p><b>Fix:</b> Add ; after return 0</p>
+                `;
+                return;
+            }
+        }
+
         let errors = errorDatabase[language];
 
         for (let i = 0; i < errors.length; i++) {
