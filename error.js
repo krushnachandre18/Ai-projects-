@@ -12,6 +12,47 @@ function typeText() {
 typeText();
 
 function analyzeError() {
+    setTimeout(() => {
+    let lines = code.split("\n");
+    let errorLine = -1;
+
+    for (let i = 0; i < lines.length; i++) {
+        if (language === "c" && lines[i].includes("printff")) {
+            errorLine = i + 1;
+
+            output.innerHTML = `
+                <h2>Typo Error</h2>
+                <p><b>Language:</b> C</p>
+                <p><b>Error at Line:</b> ${errorLine}</p>
+                <p><b>Reason:</b> printff invalid</p>
+                <p><b>Fix:</b> Use printf()</p>
+
+                <h3>Auto Fixed Code:</h3>
+                <pre>${code.replace("printff", "printf")}</pre>
+            `;
+            return;
+        }
+
+        if (language === "java" && lines[i].includes("System.out.printn")) {
+            errorLine = i + 1;
+
+            output.innerHTML = `
+                <h2>Java Error</h2>
+                <p><b>Error at Line:</b> ${errorLine}</p>
+                <p><b>Fix:</b> Use println()</p>
+
+                <h3>Auto Fixed Code:</h3>
+                <pre>${code.replace("printn", "println")}</pre>
+            `;
+            return;
+        }
+    }
+
+    output.innerHTML = `
+        <h2>No Error Found</h2>
+        <p>Code looks good.</p>
+    `;
+}, 800);
     let language = document.getElementById("language").value;
     let code = document.getElementById("codeInput").value.toLowerCase();
     let output = document.getElementById("output");
