@@ -53,32 +53,6 @@ function analyzeError() {
         <p>Code looks good.</p>
     `;
 }, 800);
-    let language = document.getElementById("language").value;
-    let code = document.getElementById("codeInput").value.toLowerCase();
-    let output = document.getElementById("output");
-
-    output.innerHTML = "<h3>Analyzing...</h3>";
-
-    setTimeout(() => {
-        if (language === "c" && code.includes("printff")) {
-            output.innerHTML = `
-                <h2>Typo Error</h2>
-                <p>Language: C</p>
-                <p>Reason: printff invalid</p>
-                <p>Fix: Use printf()</p>`;
-        }
-        else if (language === "java" && code.includes("system.out.printn")) {
-            output.innerHTML = `
-                <h2>Java Error</h2>
-                <p>Language: Java</p>
-                <p>Fix: Use println()</p>`;
-        }
-        else {
-            output.innerHTML = `
-                <h2>No Error Found</h2>
-                <p>Code looks good.</p>`;
-        }
-    }, 800);
 }
 
 const canvas = document.getElementById("particles");
