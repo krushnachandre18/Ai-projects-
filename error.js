@@ -12,6 +12,7 @@ function typeText() {
 typeText();
 
 function analyzeError() {
+    alert("Analyze clicked");
     let language = document.getElementById("language").value;
     let code = document.getElementById("codeInput").value;
     let output = document.getElementById("output");
