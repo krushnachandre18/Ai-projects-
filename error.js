@@ -6,55 +6,36 @@ function typeText() {
     if (heading && index < title.length) {
         heading.innerHTML += title.charAt(index);
         index++;
-        setTimeout(typeText, 100);
+        setTimeout(typeText, 120);
     }
 }
 typeText();
 
-function compilerOutput(output, msg) {
-    output.innerHTML = `<pre>${msg}</pre>`;
-}
+const errorDatabase = {
+    c: [
+        { pattern: "printff", error: "Typo Error", fix: "Use printf()" },
+        { pattern: "scanf(", error: "Input Check", fix: "Check scanf syntax" },
+        { pattern: "if(a = b)", error: "Comparison Error", fix: "Use ==" },
+        { pattern: "pritnf", error: "Typo Error", fix: "Use printf()" },
+        { pattern: "main()", error: "Main Check", fix: "Use int main()" },
+        { pattern: "printf(hello)", error: "Quotes Error", fix: "Use quotes" },
+        { pattern: "#include<stdio.h", error: "Header Error", fix: "Missing >" },
+        { pattern: "return", error: "Check Return", fix: "Check syntax" },
+        { pattern: "int a =", error: "Syntax Check", fix: "Check semicolon" },
+        { pattern: "for(", error: "Loop Check", fix: "Check syntax" }
+    ],
 
-function analyzeError() {
-    let language = document.getElementById("language").value;
-    let code = document.getElementById("codeInput").value.toLowerCase();
-    let output = document.getElementById("output");
-
-    let errors = errorDatabase[language];
-
-    for (let i = 0; i < errors.length; i++) {
-        if (code.includes(errors[i].pattern.toLowerCase())) {
-            output.innerHTML = `
-                <h2>${errors[i].error}</h2>
-                <p>Fix: ${errors[i].fix}</p>
-            `;
-            return;
-        }
-    }
-
-    output.innerHTML = "<h2>No Error Found</h2>";
-}
-    let language = document.getElementById("language").value;
-    let code = document.getElementById("codeInput").value;
-    let output = document.getElementById("output");
-
-    let lines = code.split("\n");
-
-    compilerOutput(output, "Compiling...\n----------------------------");
-
-    setTimeout(() => {
-        const errorDatabase = {
     java: [
         { pattern: "printn", error: "Java Typo Error", fix: "Use println()" },
         { pattern: "public clas", error: "Class Error", fix: "Use class" },
-        { pattern: "mian", error: "Main Method Error", fix: "Use main()" },
+        { pattern: "mian", error: "Main Error", fix: "Use main()" },
         { pattern: "system.out", error: "Case Error", fix: "Use System.out" },
         { pattern: "scanner", error: "Scanner Error", fix: "Check Scanner syntax" },
-        { pattern: "=", error: "Possible Assignment Error", fix: "Use == in conditions" },
-        { pattern: "int a = \"", error: "Datatype Error", fix: "String cannot go in int" },
-        { pattern: "if(", error: "Check if syntax", fix: "Check brackets" },
-        { pattern: "println(hello)", error: "Quote Error", fix: "Use quotes" },
-        { pattern: "system.out.print", error: "Print Error", fix: "Check syntax" }
+        { pattern: "if(a = b)", error: "Comparison Error", fix: "Use ==" },
+        { pattern: "int a = \"", error: "Datatype Error", fix: "String in int not allowed" },
+        { pattern: "println(hello)", error: "Quotes Error", fix: "Use quotes" },
+        { pattern: "public static voi", error: "Method Error", fix: "Use void" },
+        { pattern: "new scanner", error: "Scanner Error", fix: "Use Scanner" }
     ],
 
     python: [
@@ -62,80 +43,84 @@ function analyzeError() {
         { pattern: "imput", error: "Input Error", fix: "Use input()" },
         { pattern: "rnage", error: "Range Error", fix: "Use range()" },
         { pattern: "improt", error: "Import Error", fix: "Use import" },
-        { pattern: "leng", error: "Length Error", fix: "Use len()" },
-        { pattern: "if x =", error: "Assignment Error", fix: "Use ==" },
-        { pattern: "print(hello)", error: "Quote Error", fix: "Use quotes" },
+        { pattern: "leng(", error: "Length Error", fix: "Use len()" },
+        { pattern: "if x = ", error: "Comparison Error", fix: "Use ==" },
+        { pattern: "print(hello)", error: "Quotes Error", fix: "Use quotes" },
         { pattern: "true", error: "Boolean Error", fix: "Use True" },
         { pattern: "false", error: "Boolean Error", fix: "Use False" },
-        { pattern: "if x >", error: "Check Colon", fix: "Missing :" }
+        { pattern: "while x <", error: "Syntax Check", fix: "Check colon" }
     ],
 
     cpp: [
         { pattern: "coutt", error: "C++ Typo Error", fix: "Use cout" },
         { pattern: "cnn", error: "Input Error", fix: "Use cin" },
-        { pattern: "end;", error: "Endl Error", fix: "Use endl" },
         { pattern: "void main", error: "Main Error", fix: "Use int main()" },
-        { pattern: "#include<iostream", error: "Header Error", fix: "Check >" },
-        { pattern: "=", error: "Assignment Error", fix: "Use ==" },
-        { pattern: "cout << hello", error: "Quote Error", fix: "Use quotes" },
-        { pattern: "if(", error: "Check if syntax", fix: "Check brackets" },
-        { pattern: "cout", error: "Namespace Error", fix: "Use std::cout or namespace" },
-        { pattern: "cin <<", error: "Operator Error", fix: "Use >>" }
+        { pattern: "end;", error: "Endl Error", fix: "Use endl" },
+        { pattern: "#include<iostream", error: "Header Error", fix: "Missing >" },
+        { pattern: "if(a = b)", error: "Comparison Error", fix: "Use ==" },
+        { pattern: "cout << hello", error: "Quotes Error", fix: "Use quotes" },
+        { pattern: "cin <<", error: "Operator Error", fix: "Use >>" },
+        { pattern: "std:cout", error: "Namespace Error", fix: "Use std::cout" },
+        { pattern: "using namespace", error: "Namespace Check", fix: "Check syntax" }
     ]
 };
 
-        // C RULES
-        if (language === "c") {
-            for (let i = 0; i < lines.length; i++) {
-                let line = lines[i].toLowerCase();
+function analyzeError() {
+    let language = document.getElementById("language").value;
+    let code = document.getElementById("codeInput").value.toLowerCase();
+    let output = document.getElementById("output");
 
-                if (line.includes("printff")) {
-                    compilerOutput(output,
-`Compiling...
-----------------------------
-temp.c:${i+1}: error: implicit declaration of function 'printff'
-Fix: Use printf()`);
-                    return;
-                }
+    output.innerHTML = "<h3>Analyzing...</h3>";
 
-                if (line.includes("printf(") && !line.includes(";")) {
-                    compilerOutput(output,
-`Compiling...
-----------------------------
-temp.c:${i+1}: error: expected ';'`);
-                    return;
-                }
+    setTimeout(() => {
+        let errors = errorDatabase[language];
 
-                if (line.includes("scanf(") && !line.includes("&")) {
-                    compilerOutput(output,
-`Compiling...
-----------------------------
-temp.c:${i+1}: warning: missing '&' in scanf`);
-                    return;
-                }
-
-                if (line.includes("if(") && line.includes("=") && !line.includes("==")) {
-                    compilerOutput(output,
-`Compiling...
-----------------------------
-temp.c:${i+1}: warning: use '==' instead of '='`);
-                    return;
-                }
-
-                if (line.includes("/0")) {
-                    compilerOutput(output,
-`Compiling...
-----------------------------
-temp.c:${i+1}: error: division by zero`);
-                    return;
-                }
+        for (let i = 0; i < errors.length; i++) {
+            if (code.includes(errors[i].pattern.toLowerCase())) {
+                output.innerHTML = `
+                    <h2>${errors[i].error}</h2>
+                    <p><b>Fix:</b> ${errors[i].fix}</p>
+                `;
+                return;
             }
         }
 
-        compilerOutput(output,
-`Compiling...
-----------------------------
-Build Successful
-No errors found.`);
-    }, 800);
+        output.innerHTML = `
+            <h2>No Error Found</h2>
+            <p>Code looks good.</p>
+        `;
+    }, 700);
+}
+
+const canvas = document.getElementById("particles");
+
+if (canvas) {
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const letters = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&";
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const drops = [];
+
+    for (let i = 0; i < columns; i++) drops[i] = 1;
+
+    function drawMatrix() {
+        ctx.fillStyle = "rgba(0,0,0,0.05)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = "#00ff99";
+        ctx.font = fontSize + "px monospace";
+
+        for (let i = 0; i < drops.length; i++) {
+            const text = letters.charAt(Math.floor(Math.random() * letters.length));
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            drops[i]++;
+        }
+    }
+
+    setInterval(drawMatrix, 33);
 }
