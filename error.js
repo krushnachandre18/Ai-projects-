@@ -1,4 +1,4 @@
-const title = "BUGHUNTER AI";
+const title = "BUGHUNTER AI👿";
 let index = 0;
 const heading = document.getElementById("typing");
 
@@ -11,84 +11,73 @@ function typeText() {
 }
 typeText();
 
+function compilerOutput(output, msg) {
+    output.innerHTML = `<pre>${msg}</pre>`;
+}
+
 function analyzeError() {
-    alert("Analyze clicked");
     let language = document.getElementById("language").value;
     let code = document.getElementById("codeInput").value;
     let output = document.getElementById("output");
 
-    output.innerHTML = "<h3>Analyzing...</h3>";
+    let lines = code.split("\n");
+
+    compilerOutput(output, "Compiling...\n----------------------------");
 
     setTimeout(() => {
-        let lines = code.split("\n");
 
-        for (let i = 0; i < lines.length; i++) {
-            let line = lines[i].toLowerCase();
+        // C RULES
+        if (language === "c") {
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i].toLowerCase();
 
-            if (language === "c" && line.includes("printff")) {
-                output.innerHTML = `
-                    <h2>Typo Error</h2>
-                    <p>Line: ${i + 1}</p>
-                    <p>Reason: printff invalid</p>
-                    <p>Fix: Use printf()</p>
-                    <pre>${code.replace(/printff/g, "printf")}</pre>
-                `;
-                return;
-            }
+                if (line.includes("printff")) {
+                    compilerOutput(output,
+`Compiling...
+----------------------------
+temp.c:${i+1}: error: implicit declaration of function 'printff'
+Fix: Use printf()`);
+                    return;
+                }
 
-            if (language === "java" && line.includes("system.out.printn")) {
-                output.innerHTML = `
-                    <h2>Java Error</h2>
-                    <p>Line: ${i + 1}</p>
-                    <p>Reason: printn invalid</p>
-                    <p>Fix: Use println()</p>
-                    <pre>${code.replace(/printn/g, "println")}</pre>
-                `;
-                return;
+                if (line.includes("printf(") && !line.includes(";")) {
+                    compilerOutput(output,
+`Compiling...
+----------------------------
+temp.c:${i+1}: error: expected ';'`);
+                    return;
+                }
+
+                if (line.includes("scanf(") && !line.includes("&")) {
+                    compilerOutput(output,
+`Compiling...
+----------------------------
+temp.c:${i+1}: warning: missing '&' in scanf`);
+                    return;
+                }
+
+                if (line.includes("if(") && line.includes("=") && !line.includes("==")) {
+                    compilerOutput(output,
+`Compiling...
+----------------------------
+temp.c:${i+1}: warning: use '==' instead of '='`);
+                    return;
+                }
+
+                if (line.includes("/0")) {
+                    compilerOutput(output,
+`Compiling...
+----------------------------
+temp.c:${i+1}: error: division by zero`);
+                    return;
+                }
             }
         }
 
-        output.innerHTML = `
-            <h2>No Error Found</h2>
-            <p>Code looks good.</p>
-        `;
+        compilerOutput(output,
+`Compiling...
+----------------------------
+Build Successful
+No errors found.`);
     }, 800);
-}
-
-const canvas = document.getElementById("particles");
-
-if (canvas) {
-    const ctx = canvas.getContext("2d");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const letters = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&";
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
-    const drops = [];
-
-    for (let i = 0; i < columns; i++) {
-        drops[i] = 1;
-    }
-
-    function drawMatrix() {
-        ctx.fillStyle = "rgba(0,0,0,0.05)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.fillStyle = "#00ff99";
-        ctx.font = fontSize + "px monospace";
-
-        for (let i = 0; i < drops.length; i++) {
-            const text = letters.charAt(Math.floor(Math.random() * letters.length));
-            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                drops[i] = 0;
-            }
-
-            drops[i]++;
-        }
-    }
-
-    setInterval(drawMatrix, 33);
 }
